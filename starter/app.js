@@ -64,9 +64,13 @@ app.post('/add-movie-html', function(req, res){ // Adds a movie to the database
 
     let duration = parseInt(data['duration']);
 
-    query1 = `INSERT INTO Movies (title, description, duration) VALUES ('${data.title}', '${data.description}', ${duration})`;
+    // Added the question marks to the queries because SQL doesn't like quotes in strings and movie descriptions are full of them
+    let query1 = 'INSERT INTO Movies (title, description, duration) VALUES (?, ?, ?)';
 
-    db.pool.query(query1, function(error, rows, fields){
+    let inserts = [data.title, data.description, duration];
+
+
+    db.pool.query(query1, inserts, function(error, rows, fields){
         // Check if there was an error
         if (error){
             console.log(error);
@@ -98,14 +102,14 @@ app.post('/delete-movie', function(req, res){ // Deletes a movie from the databa
 });
 
 
-app.get('/movie/:id', function(req, res) {
+app.get('/movie/:id', function(req, res) {  // Got help with this function so not all mine
     // Get the movie ID from the URL parameters
     let movieID = req.params.id;
   
     // Query to get the movie data
-    let query = `SELECT * FROM Movies WHERE movieID = ${movieID};`;
+    let query = 'SELECT * FROM Movies WHERE movieID = ?';
   
-    db.pool.query(query, function(error, rows, fields) {
+    db.pool.query(query, [movieID], function(error, rows, fields) {
         // Check if there was an error
         if (error){
           console.log(error);
@@ -123,16 +127,12 @@ app.post('/update-movie', function(req, res) {
     // Get the updated movie data from the request body
     let movie = req.body;
 
-    //let duration = parseInt(movie.duration);
+    let duration = parseInt(movie.duration);
 
-    //console.log(movie.ID);
-    //console.log(typeof(movie))
-    //console.log(duration);
-  
     // Query to update the movie data
-    let query = `UPDATE Movies SET title = '${movie.title}', description = '${movie.description}', duration = '${movie.duration}' WHERE movieID = ${movie.ID};`;
-  
-    db.pool.query(query, function(error, rows, fields) {
+    let query = 'UPDATE Movies SET title = ?, description = ?, duration = ? WHERE movieID = ?';
+
+    db.pool.query(query, [movie.title, movie.description, duration, movie.ID], function(error, rows, fields) {
         // Check if there was an error
         if (error){
           console.log(error);
