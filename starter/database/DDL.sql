@@ -19,7 +19,10 @@ LOCK TABLES `Movies` WRITE;
 INSERT INTO Movies (movieID, title, description, duration) VALUES
   (1, 'The Shawshank Redemption', 'Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.', 142),
   (2, 'The Godfather', 'The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.', 175),
-  (3, 'The Dark Knight', 'When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.', 152);
+  (3, 'The Dark Knight', 'When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.', 152),
+  (4, 'Back to the Future', 'Marty McFly, a 17-year-old high school student, is accidentally sent 30 years into the past in a time-traveling DeLorean invented by his close friend, the maverick scientist Doc Brown.', 116),
+  (5, 'Fight Club', 'An insomniac office worker and a devil-may-care soap maker form an underground fight club that evolves into much more.', 139),
+  (6, 'The Prestige', 'After a tragic accident, two stage magicians in 1890s London engage in a battle to create the ultimate illusion while sacrificing everything they have to outwit each other.', 130);
 
 UNLOCK TABLES;
 /*USERS*/
@@ -33,7 +36,9 @@ LOCK TABLES `Users` WRITE;
 INSERT INTO Users (userID, password, first_name, email) VALUES
   (1, 'password1', 'John', 'john@example.com'),
   (2, 'password2', 'Jane', 'jane@example.com'),
-  (3, 'BillyRockz1', 'Billy', 'BigBill@gmail.com');
+  (3, 'BillyRockz1', 'Billy', 'BigBill@gmail.com'),
+  (4, 'R3dh@wk38BlazingSun92@', 'Ethan', 'Ethan@EthanWatchesYouSleep.com'),
+  (5, 'G0ldenSunset@77', 'Mia', 'mia93@yahoo.com');
 UNLOCK TABLES;
 
 CREATE TABLE Rentals (
@@ -76,7 +81,9 @@ INSERT INTO Genres (genreID, genre_name) VALUES
   (1, 'Drama'),
   (2, 'Crime'),
   (3, 'Action'),
-  (4, 'Romance');
+  (4, 'Romance'),
+  (5, 'Comedy'),
+  (6, 'SciFi');
 UNLOCK TABLES;
 
 CREATE TABLE Genres_Movies (
