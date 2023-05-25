@@ -29,7 +29,7 @@
 				document.getElementById('browse').style.display = 'block';
 				document.getElementById('insert').style.display = 'block';
 				document.getElementById('update').style.display = 'block';
-				document.getElementById('delete').style.display = 'block';
+				document.getElementById('delete').style.display = 'none';   // Hiding delete since there's nothing to do on it until you're deleting something
 			}
 			else { //by default display browse
 				document.getElementById('browse').style.display = 'block';
@@ -42,7 +42,7 @@
     function newMovie() { showform('insert'); }
 
 
-    function updateMovie(mid) { // Most of this function is from ChatGPT
+    function updateMovie(mid) { // The first three lines of this function aren't mine
       // Make an AJAX request to fetch the current movie data
       fetch('/movie/' + mid)
       .then(response => response.json())
@@ -56,8 +56,19 @@
 
       // Show the update form
       showform('update');
-    });
-}
+      });
+    }
+
+    // Updates the visible movieID field for the user
+    function updateID() {
+      const movieTitleSelect = document.getElementById('updateMovieTitle');
+      const selectedTitle = movieTitleSelect.value;
+      const selectedOption = movieTitleSelect.options[movieTitleSelect.selectedIndex];
+      const selectedID = selectedOption.getAttribute('data-id');
+      const movieIDInput = document.getElementById('updateMovieID');
+      
+      movieIDInput.value = selectedID;
+    }
 
 
     function deleteMovie(mid, title) {
@@ -68,7 +79,13 @@
     }
 
 
-    function browseMovies() { showform ('browse'); }
+    function browseMovies() { 
+      // Resets movie title and ID in the drop down menu
+      document.getElementById('updateMovieTitle').value = '';
+      updateID();
+
+      showform ('browse'); 
+    }
     function showAll() { showform ('all'); }
 
   </script>
@@ -175,8 +192,15 @@
           <legend><strong>Update Movie</strong></legend>
 
           <label>Title<br></label> 
-            <input type="text" name="title" id="updateMovieTitle" required>
-            <input type="text" name="ID" id="updateMovieID" readonly style="width: 100px;">
+
+          <select name="title" id="updateMovieTitle" required onchange="updateID()">  <!--Updates movieID for user when they click on each movie title-->
+            <option selected disabled value="">Select a Movie</option>
+            {{#each data}}
+              <option value="{{this.title}}" data-id="{{this.movieID}}">{{this.title}}</option>
+            {{/each}}
+          </select>
+
+          <input type="text" name="ID" id="updateMovieID" readonly onfocus="this.blur()" style="width: 100px;">
             <br>
 
           <label>Duration<br></label>
