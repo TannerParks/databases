@@ -98,6 +98,54 @@ app.post('/delete-movie', function(req, res){ // Deletes a movie from the databa
 });
 
 
+app.get('/movie/:id', function(req, res) {
+    // Get the movie ID from the URL parameters
+    let movieID = req.params.id;
+  
+    // Query to get the movie data
+    let query = `SELECT * FROM Movies WHERE movieID = ${movieID};`;
+  
+    db.pool.query(query, function(error, rows, fields) {
+        // Check if there was an error
+        if (error){
+          console.log(error);
+          res.sendStatus(400);    // Send HTTP response 400 to user
+        }
+        else{
+          // Respond with the movie data
+          res.json(rows[0]);
+          }
+    });
+});
+
+
+app.post('/update-movie', function(req, res) {
+    // Get the updated movie data from the request body
+    let movie = req.body;
+
+    //let duration = parseInt(movie.duration);
+
+    //console.log(movie.ID);
+    //console.log(typeof(movie))
+    //console.log(duration);
+  
+    // Query to update the movie data
+    let query = `UPDATE Movies SET title = '${movie.title}', description = '${movie.description}', duration = '${movie.duration}' WHERE movieID = ${movie.ID};`;
+  
+    db.pool.query(query, function(error, rows, fields) {
+        // Check if there was an error
+        if (error){
+          console.log(error);
+          res.sendStatus(400);    // Send HTTP response 400 to user
+        }
+        else{
+          // Redirect to the main page
+          res.redirect('/');
+        }
+    });
+});
+
+
 // LISTENER
 app.listen(PORT, function(){
     console.log('Express started on http://localhost:' + PORT + '; press Ctrl-C to terminate.')

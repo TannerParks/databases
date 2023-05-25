@@ -40,7 +40,25 @@
 		}
     
     function newMovie() { showform('insert'); }
-    function updateMovie(mid) {showform('update'); }
+
+
+    function updateMovie(mid) { // Most of this function is from ChatGPT
+      // Make an AJAX request to fetch the current movie data
+      fetch('/movie/' + mid)
+      .then(response => response.json())
+      .then(movie => {
+
+      // Fill in the form fields with the current movie data
+      document.getElementById('updateMovieID').value = movie.movieID;
+      document.getElementById('updateMovieTitle').value = movie.title;
+      document.getElementById('updateMovieDescription').value = movie.description;
+      document.getElementById('updateMovieDuration').value = movie.duration;
+
+      // Show the update form
+      showform('update');
+    });
+}
+
 
     function deleteMovie(mid, title) {
       document.getElementById('deleteMovieID').value = mid;
@@ -152,20 +170,24 @@
     <p>&nbsp;</p>
 
     <div id="update">
-      <form method="POST" id="updateMovie">
+      <form method="POST" id="updateMovieForm" action="/update-movie">
         <fieldset>
           <legend><strong>Update Movie</strong></legend>
+
           <label>Title<br></label> 
-            <input type="text" name="title" value="The Shawshank Redemption" required>
-            <input type="text" name="ID" id="updateMovieID" value="1" disabled style="width: 100px;"> <!--Placeholder but the value will update depending on the movie ID-->
+            <input type="text" name="title" id="updateMovieTitle" required>
+            <input type="text" name="ID" id="updateMovieID" readonly style="width: 100px;">
             <br>
+
           <label>Duration<br></label>
-            <input type="number" name="number" value=142 required>
+            <input type="number" name="duration" id="updateMovieDuration" required>
             <br>
+
           <label>Description<br></label> 
-            <textarea name="description" value="Enter text here..." cols="80" rows="5" required>Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency</textarea>
+            <textarea name="description" id="updateMovieDescription" cols="80" rows="5" required></textarea>
+       
         </fieldset>
-          <input class="btn" type="submit" id="updateMovie" value="Update Movie">
+          <input class="btn" type="submit" id="updateMovieButton" value="Update Movie">
           <input class="btn" type="button" value="cancel" onClick="browseMovies()">
       </form>
     </div>
