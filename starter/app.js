@@ -23,6 +23,7 @@ var exphbs = require('express-handlebars');     // Import express-handlebars
 app.engine('.hbs', engine({extname: ".hbs"}));  // Create an instance of the handlebars engine to process templates
 app.set('view engine', '.hbs');                 // Tell express to use the handlebars engine whenever it encounters a *.hbs file.
 
+
 // Routes
 app.get('/', function(req, res){
     let query1 = "SELECT * FROM Movies;"    // Define query
@@ -31,6 +32,7 @@ app.get('/', function(req, res){
         res.render('movies', {data: rows});
     })
 });
+
 
 app.get('/search', function(req, res){  // Displays movies based on users searched title
     let query1;
@@ -54,6 +56,7 @@ app.get('/search', function(req, res){  // Displays movies based on users search
     })
 });
 
+
 app.post('/add-movie-html', function(req, res){ // Adds a movie to the database
 
     // Grab values from add-movie-html
@@ -76,9 +79,26 @@ app.post('/add-movie-html', function(req, res){ // Adds a movie to the database
 });
 
 
-/*
-    LISTENER
-*/
+app.post('/delete-movie', function(req, res){ // Deletes a movie from the database
+
+    let movieID = req.body.movieID; 
+
+    let query1 = `DELETE FROM Movies WHERE movieID = ${movieID};`;
+
+    db.pool.query(query1, function(error, rows, fields){
+        // Check if there was an error
+        if (error){
+            console.log(error);
+            res.sendStatus(400);    // Send HTTP response 400 to user
+        }
+        else{
+            res.redirect('/');
+        }
+    })
+});
+
+
+// LISTENER
 app.listen(PORT, function(){
     console.log('Express started on http://localhost:' + PORT + '; press Ctrl-C to terminate.')
 });

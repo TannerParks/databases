@@ -41,7 +41,15 @@
     
     function newMovie() { showform('insert'); }
     function updateMovie(mid) {showform('update'); }
-    function deleteMovie(mid) {showform ('delete'); }
+
+    function deleteMovie(mid, title) {
+      document.getElementById('deleteMovieID').value = mid;
+      document.getElementById('deleteMovieTitle').textContent = title;
+      document.getElementById('deleteMovieIDLabel').textContent = 'ID: ' + mid;
+      showform ('delete');
+    }
+
+
     function browseMovies() { showform ('browse'); }
     function showAll() { showform ('all'); }
 
@@ -85,8 +93,8 @@
         {{!-- For each row print ID, title, description, duration --}}
         {{#each data}}
         <tr>
-          <td><a href="#" onClick="updateMovie('this.movieID')">Edit</a></td>
-          <td><a href="#" onclick="deleteMovie('this.movieID')">Delete</a></td>
+          <td><a href="#" onClick="updateMovie({{this.movieID}})">Edit</a></td>
+          <td><a href="#" onclick="deleteMovie({{this.movieID}}, '{{this.title}}')">Delete</a></td>
           <td>{{this.movieID}}</td>
           <td>{{this.title}}</td>
           <td>{{this.description}}</td>
@@ -166,13 +174,12 @@
   <p>&nbsp;</p>
 
   <div id="delete">
-    <form method="POST" id="deleteMovie">
+    <form method="POST" id="deleteMovie", action="/delete-movie">
       <fieldset class="fields">
       <legend><strong>Delete Movie</strong></legend>
-      <p>Are you sure you wish to delete the following?</p>
-      <input type="hidden" name="movieID" id="deleteMovieID" value="1">
-      <label><strong>ID:</strong></label> 1
-        <label> <strong>Name</strong> </label> The Shawshank Redemption
+      <p>Are you sure you want to delete this movie?</p>
+      <p><strong id="deleteMovieIDLabel">ID:</strong> <span id="deleteMovieTitle"></span></p>
+      <input type="hidden" name="movieID" id="deleteMovieID">
       </fieldset>
       <input class="btn" type="submit" id="DeleteMovie" value="Delete Movie">
       <input class="btn" type="button" value="cancel" onClick="browseMovies()">
