@@ -1,0 +1,32 @@
+
+body {
+  background-color: lightblue;
+}
+
+input {
+  width: 300px; /* Increases width of inputs */
+}
+
+/*
+#addMovie 
+#updateMovie {
+  display: flex;
+  flex-direction: row;
+}
+
+#insert,
+#update {
+  display: inline-block;
+  width: 50%;
+  vertical-align: top;
+}
+*/
+
+.formContainer {
+  display: flex;
+}
+
+#insert,
+#update {
+  flex: 1;
+}

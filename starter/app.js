@@ -1,44 +1,81 @@
 /*
     SETUP
 */
+
+// Express
 var express = require('express');
-var db = require('./database/db-connector')
 var app = express();
+
+// app.js - SETUP section
+app.use(express.json())
+app.use(express.urlencoded({extended: true}))
+app.use(express.static('public'))
+
+// Port number
 PORT = 55000;
 
-/*
-    ROUTES
-*/
-app.get('/', function(req, res)
-    {
-        // Define our queries
-        query1 = 'DROP TABLE IF EXISTS diagnostic;';
-        query2 = 'CREATE TABLE diagnostic(id INT PRIMARY KEY AUTO_INCREMENT, text VARCHAR(255) NOT NULL);';
-        query3 = 'INSERT INTO diagnostic (text) VALUES ("MySQL is working!")';
-        query4 = 'SELECT * FROM diagnostic;';
+// Database
+var db = require('./database/db-connector');
 
-        // Execute every query in an asynchronous manner, we want each query to finish before the next one starts
+// Handlebars
+const { engine } = require('express-handlebars');
+var exphbs = require('express-handlebars');     // Import express-handlebars
+app.engine('.hbs', engine({extname: ".hbs"}));  // Create an instance of the handlebars engine to process templates
+app.set('view engine', '.hbs');                 // Tell express to use the handlebars engine whenever it encounters a *.hbs file.
 
-        // DROP TABLE...
-        db.pool.query(query1, function (err, results, fields){
+// Routes
+app.get('/', function(req, res){
+    let query1 = "SELECT * FROM Movies;"    // Define query
+    
+    db.pool.query(query1, function(error, rows, fields){    // Execute query
+        res.render('movies', {data: rows});
+    })
+});
 
-            // CREATE TABLE...
-            db.pool.query(query2, function(err, results, fields){
+app.get('/search', function(req, res){  // Displays movies based on users searched title
+    let query1;
 
-                // INSERT INTO...
-                db.pool.query(query3, function(err, results, fields){
+    if (req.query.searchedTitle === undefined || req.query.searchedTitle == ''){
+        query1 = "SELECT * FROM Movies;";
+    }
+    else{
+        let searchedTitle = req.query.searchedTitle;
+        query1 = `SELECT * FROM Movies WHERE title LIKE '%${searchedTitle}%'`;
+    }
 
-                    // SELECT *...
-                    db.pool.query(query4, function(err, results, fields){
+    db.pool.query(query1, function(error, rows, fields){
+        if (error){
+            console.log(error);
+            res.sendStatus(400);
+        }
+        else{
+            res.render('movies', {data: rows});
+        }
+    })
+});
 
-                        // Send the results to the browser
-                        let header = "<h1>Starter Application Working: </h1>"
-                        res.send(header + JSON.stringify(results));
-                    });
-                });
-            });
-        });
-    });
+app.post('/add-movie-html', function(req, res){ // Adds a movie to the database
+
+    // Grab values from add-movie-html
+    let data = req.body;
+
+    let duration = parseInt(data['duration']);
+
+    query1 = `INSERT INTO Movies (title, description, duration) VALUES ('${data.title}', '${data.description}', ${duration})`;
+
+    db.pool.query(query1, function(error, rows, fields){
+        // Check if there was an error
+        if (error){
+            console.log(error);
+            res.sendStatus(400);    // Send HTTP response 400 to user
+        }
+        else{
+            res.redirect('/');
+        }
+    })
+});
+
+
 /*
     LISTENER
 */

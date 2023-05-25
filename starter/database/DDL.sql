@@ -10,7 +10,7 @@ DROP TABLE IF EXISTS Movies;
 
 
 CREATE TABLE Movies (
-  movieID INT PRIMARY KEY,
+  movieID INT AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(45),
   description LONGTEXT,
   duration INT
@@ -37,7 +37,7 @@ INSERT INTO Users (userID, password, first_name, email) VALUES
 UNLOCK TABLES;
 
 CREATE TABLE Rentals (
-  rentalID INT PRIMARY KEY,
+  rentalID INT AUTO_INCREMENT PRIMARY KEY,
   userID INT,
   movieID INT,
   rental_date DATE,
@@ -52,7 +52,7 @@ INSERT INTO Rentals (rentalID, userID, movieID, rental_date) VALUES
  UNLOCK TABLES;
 
 CREATE TABLE Reviews (
-  reviewID INT PRIMARY KEY,
+  reviewID INT AUTO_INCREMENT PRIMARY KEY,
   userID INT,
   movieID INT,
   rating FLOAT,
@@ -68,7 +68,7 @@ INSERT INTO Reviews (reviewID, userID, movieID, rating, num_ratings) VALUES
 UNLOCK TABLES;
 
 CREATE TABLE Genres (
-  genreID INT PRIMARY KEY,
+  genreID INT AUTO_INCREMENT PRIMARY KEY,
   genre_name VARCHAR(45)
 );
 LOCK TABLES `Genres` WRITE;
@@ -94,7 +94,7 @@ INSERT INTO Genres_Movies (genreID, movieID) VALUES
 UNLOCK TABLES;
   
 CREATE TABLE Actors (
-  actorID INT PRIMARY KEY,
+  actorID INT AUTO_INCREMENT PRIMARY KEY,
   actor VARCHAR(45)
 );
 LOCK TABLES `Actors` WRITE;
